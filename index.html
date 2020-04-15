@@ -35,10 +35,20 @@
           <a class="nav-link" href="home">Blogs <span class="sr-only">(current)</span></a>
         </li>
       </ul>
+        {% if user.is_authenticated %}
 
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Hello {{request.user}}
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="logout">Logout</a>
+        </li>
+        
+      {% else %}
       <!-- Modal Signin button-->
       <div class="Signin"> 
-        <button class="btn btn-success" type="button" data-backdrop="static" data-toggle="modal"   data-target="#loginModal" aria-controls="navbarCollapse" aria-label="Toggle navigation" >
+        <button class="btn btn-success " type="button" data-backdrop="static" data-toggle="modal"   data-target="#loginModal" aria-controls="navbarCollapse" aria-label="Toggle navigation" >
           Sign In
         </button>
     </div>
@@ -49,9 +59,10 @@
           SignUp
       </button>
     </div>
-
+    
+    {%endif%}
      <!-- Modal Signin -->
-     <div class="modal" id="loginModal" tabindex="-1" role="dialog"  aria-labelledby="">
+     <div class="modal" id="loginModal" tabindex="-1" role="dialog"  aria-labelledby="" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <form class="modal-content">
           <div class="modal-header">
@@ -62,7 +73,10 @@
           </div>
             <div class="modal-body">
               <p>Modal body text goes here.</p>
+
               <form method="POST" action="login">
+                 <!-- CSRF Token-->
+              {% csrf_token %}
                 <div class="form-group">
                   <label for="uname">User Name</label>
                   <input type="text" class="form-control" id="uname"required>
@@ -96,6 +110,8 @@
 
       <div class="modal-body">
         <form method="POST" action="signup">
+          <!-- CSRF Token-->
+          {% csrf_token %}
           <!--Sign up elements-->
             <div class="form-group">
                 <label for="fname">First Name</label>
@@ -122,7 +138,6 @@
             <input type="password" class="form-control" id="password2" required>
           </div>
 
-          {% csrf_token %}
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
