@@ -81,18 +81,18 @@
     <!-------------------------------------------------->
 <div class="container">
     <div align="left">  
-       <label>Comments</label>
+       <strong>Type your Comments here</strong>
     </div>
 
     <br>
-    <form method="get" action="mauri">
-
+    <form method="POST" action="mauri">
+      {% csrf_token%}
       <div align="left">
-        Name: <input type="text" name="name">
+        Name: <input type="text" name="name" required>
       </div>
     <br>
       <div align="left">
-      <textarea name="text" cols="80" rows="6"></textarea>
+      <textarea name="text" cols="80" rows="6" required></textarea>
       </div>
                                         
       <br>
@@ -101,14 +101,20 @@
       <button type="submit">Post</button>
       </div>
     </form>
-    
-    <div align="left">
-    <blockquote class="blockquote">
-        <p class="mb-0"> {{djtext}}</p>
-        <footer class="blockquote-footer"> {{djby}} {{djname}}</cite></footer>
-      </blockquote>
-    </div>
+      <div align="left">
+        <h5>Comments </h5>
+      </div>
+      <br>
+    {% if request.method == "POST" %}
+      <div align="left">
+        <blockquote class="blockquote">
+            <p class="mb-0"> {{djtext}}</p>
+            <footer class="blockquote-footer"> {{djby}} {{djname}}</cite></footer>
+          </blockquote>
+        </div>
+      {% endif %}
 </div>
+
     
 </body>
 

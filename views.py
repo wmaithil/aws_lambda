@@ -19,17 +19,15 @@ def blogpost(request):
     return render(request,'blog/blogpost.html')
 
 def mauritius(request):
-    if (request.method=="GET"):
-        djname=request.GET.get('name',' ')
-        djtext=request.GET.get('text','')
+    if (request.method=="POST"):
+        djname = request.POST['name']
+        djtext = request.POST['text']
+        print ("DJTEXT is {}".format(djtext) )
         by='by '
-        if (djtext):
-            pass
-        if(djname==' ' or djtext=="notok"):
-            by=' '
         print("{} is the received input from server".format(djtext))
         params={'djname':djname,'djtext': djtext,'djby':by}
         return render(request,'blog/mauri.html',params)
+    return render(request,'blog/mauri.html')
    
 
 def sunset(request):
@@ -88,14 +86,18 @@ def handleLogin(request):
         if user is not None:
             login(request, user)
             messages.success(request,"Successfully logged in")
-    else:
-        return messages.error(request,'404')
-    return HttpResponse('handleLogin')
+        else:
+            messages.error(request,'Invalid credentials')
+            return redirect('blog')
+
+    return HttpResponse('404 page not found')
 
 #________________________________________________________________________________________
 #Logout
 
 def handleLogout(request):
-
+    if(request.method=="POST"):
+        logout(request)
+        messages.success(request,"Successfully logged out")
     return HttpResponse('handleLogout')
   
