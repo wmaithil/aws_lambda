@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render , redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate,login , logout
+from django.contrib.auth import authenticate, login , logout
 from django.contrib import messages
 
 # Create your views here.
@@ -21,7 +21,7 @@ def mauritius(request):
     if (request.method=="POST"):
         djname = request.POST['name']
         djtext = request.POST['text']
-        print ("DJTEXT is {}".format(djtext) )
+        print ("djtext :{}".format(djtext) )
         by='by '
         print("{} is the received input from server".format(djtext))
         params={'djname':djname,'djtext': djtext,'djby':by}
@@ -47,13 +47,15 @@ def confirm(request):
 #_________________________________________________________________________________
 #SignUp
 def signup(request):
-    if(request.method=="POST"):
+    if(request.method == "POST"):
         fname = request.POST['fname']
         print(fname)
         lname = request.POST['lname']
         print(lname)
         username = request.POST['username']
         print(username)
+        emailid = request.POST['emailid']
+        print(emailid)
         password1 = request.POST['password1']
         password2 = request.POST['password2']
 
@@ -69,7 +71,7 @@ def signup(request):
             #return redirect('blog')
             return redirect('blog')
         #
-        myuser= User.objects.create_user(username,  password1)
+        myuser= User.objects.create_user(username, emailid ,password1)
         myuser.first_name = fname
         myuser.last_name = lname
         myuser.save()
@@ -83,13 +85,13 @@ def signup(request):
 #____________________________________________________________________________________
 
 def handleLogin(request):
-    if request.method == "POST":
-        Lusername=request.POST['uname']
-        Lpassword=request.POST['passwd']
+    if(request.method == "POST"):
+        lusername = request.POST['loginusername']
+        lpassword = request.POST['loginpassword']
         print("username recieved")
 
         #authentication
-        user= authenticate(username=Lusername , password=Lpassword)
+        user= authenticate(username=lusername , password=lpassword)
         print("Authentication done")
 
         if user is not None:
@@ -108,9 +110,8 @@ def handleLogin(request):
 #Logout
 
 def handleLogout(request):
-    if(request.method == "POST"):
-        logout(request)
-        messages.success(request,"Successfully logged out")
-        return redirect('blog') 
-    return HttpResponse('handleLogout')
+    logout(request)
+    messages.success(request,"Successfully logged out")
+    return redirect('blog') 
+    
   
