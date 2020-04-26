@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login , logout
 from django.contrib import messages
+from .models import BlogComment
 
 # Create your views here.
 def blog(request):
@@ -16,36 +17,56 @@ def cover(request):
 def home(request):
     return render(request,'blog/bloghome.html')
 
-
 def mauritius(request):
     if (request.method=="POST"):
-        djname = request.POST['name']
-        djtext = request.POST['text']
-        print ("djtext :{}".format(djtext) )
-        by='by '
-        print("{} is the received input from server".format(djtext))
-        params={'djname':djname,'djtext': djtext,'djby':by}
+        user_comment= request.POST.get("comment")
+        post="mauri"
+        user = request.user
+        print "__________________________________________________"
+        print (user_comment )
+        print (post)
+        print (user)
+        comment = BlogComment(user=user ,post=post ,comment=user_comment )
+        comment.save()
+
+    #Loading the comments 
+        comments=BlogComment.objects.filter(post=post)
+        params={ 'djtext': user_comment , 'comments':comments }
+        messages.success(request,"Comment Posted Successfully")
         return render(request,'blog/mauri.html',params)
-    return render(request,'blog/mauri.html')
-   
+    
+    comments=BlogComment.objects.filter(post="mauri")
+    params={ 'comments':comments }
+    return render(request,'blog/mauri.html',params)
 
 def sunset(request):
     return render(request,'blog/sunset.html')
 
 def beach(request):
-    return render(request,'blog/beach.html')
-#_________________________________________________________________________________
+    if (request.method=="POST" ):
+        user_comment= request.POST.get("comment")
+        post="beach"
+        user = request.user
+        print "__________________________________________________"
+        print (user_comment )
+        print (post)
+        print (user)
+        comment = BlogComment(user=user ,post=post ,comment=user_comment )
+        comment.save()
 
-def confirm(request):
-    djname=request.GET.get('name','default')
-    djtext=request.GET.get('text','default')
-    by='- by '
-    print("{} is the received input from server".format(djtext))
-    params={'djname':djname,'djtext': djtext,'djby':by}
-    return render(request,'blog/mauri.html',params)
+    #Loading the comments 
+        comments=BlogComment.objects.filter(post=post)
+        params={ 'djtext': user_comment , 'comments':comments }
+        messages.success(request,"Comment Posted Successfully")
+        return render(request,'blog/beach.html',params)
+    
+    comments=BlogComment.objects.filter(post="beach")
+    params={ 'comments': comments }
+    return render(request,'blog/beach.html',params)
 
 #_________________________________________________________________________________
 #SignUp
+
 def signup(request):
     if(request.method == "POST"):
         fname = request.POST['fname']
